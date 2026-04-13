@@ -55,8 +55,8 @@ class RefBookElementsView(APIView):
             ),
         ]
     )
-    def get(self, request, id):
-        ref_book = get_object_or_404(RefBook, code=id)
+    def get(self, request, code):
+        ref_book = get_object_or_404(RefBook, code=code)
         version_param = request.query_params.get('version')
         if version_param:
             version = get_object_or_404(
@@ -111,8 +111,8 @@ class CheckElementView(APIView):
             ),
         ]
     )
-    def get(self, request, id):
-        ref_book = get_object_or_404(RefBook, code=id)
+    def get(self, request, code):
+        ref_book = get_object_or_404(RefBook, code=code)
         code_param = request.query_params.get('code')
         value_param = request.query_params.get('value')
         version_param = request.query_params.get('version')

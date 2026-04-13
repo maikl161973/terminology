@@ -8,10 +8,10 @@ from .views import (
 urlpatterns = [
     path('refbooks/', RefBookListView.as_view(), name='refbooks'),
     path(
-        'refbooks/<str:id>/elements/', RefBookElementsView.as_view(),
+        'refbooks/<str:code>/elements/', RefBookElementsView.as_view(),
         name='refbook-elements'),
     path(
-        'refbooks/<str:id>/check_element/',
+        'refbooks/<str:code>/check_element/',
         CheckElementView.as_view(), name='check-element'
     ),
 ]
