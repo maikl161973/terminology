@@ -88,8 +88,3 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-}
