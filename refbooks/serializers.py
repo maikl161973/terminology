@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import RefBook, Version, Element
+from .models import RefBook, Element
 
 
 class RefBookSerializer(serializers.ModelSerializer):
@@ -12,9 +12,3 @@ class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Element
         fields = ('code', 'value')
-
-
-class VersionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Version
-        fields = ('version', 'start_date')
