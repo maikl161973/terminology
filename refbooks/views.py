@@ -37,7 +37,7 @@ class RefBookListView(APIView):
                 versions__start_date__lte=on_date
             )
         return Response({
-            'refbooks':self.serializer_class(queryset, many=True).data})
+            'refbooks': self.serializer_class(queryset, many=True).data})
 
 
 class RefBookElementsView(APIView):
