@@ -5,6 +5,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from .helpers import current_version_refbook
 from .models import RefBook, Version, Element
 from .serializers import RefBookSerializer, ElementSerializer
 
@@ -65,7 +67,7 @@ class RefBookElementsView(APIView):
                 version=version_param
             )
         else:
-            version = ref_book.current_version()
+            version = current_version_refbook(ref_book)
             if not version:
                 return Response(
                     {
@@ -130,7 +132,7 @@ class CheckElementView(APIView):
                 version=version_param
             )
         else:
-            version = ref_book.current_version()
+            version = current_version_refbook(ref_book)
             if not version:
                 return Response({'exists': False})
 

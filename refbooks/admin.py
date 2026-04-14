@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from .helpers import current_version_refbook
 from .models import RefBook, Version, Element
 
 admin.site.site_header = (
@@ -21,11 +22,11 @@ class RefBookAdmin(admin.ModelAdmin):
     inlines = [VersionInline]
 
     def current_version(self, obj):
-        version = obj.current_version()
+        version = current_version_refbook(obj)
         return version.version if version else '-'
 
     def current_version_start_date(self, obj):
-        version = obj.current_version()
+        version = current_version_refbook(obj)
         return version.start_date if version else '-'
 
     current_version.short_description = 'Текущая версия'
