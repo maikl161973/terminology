@@ -3,20 +3,27 @@ from django.utils.dateparse import parse_date
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework.authentication import (
+    TokenAuthentication, SessionAuthentication)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .helpers import current_version_refbook
 from .models import RefBook, Version, Element
+from .permissions import IsAccessPermissionGroup
 from .serializers import RefBookSerializer, ElementSerializer
 
 
 class RefBookListView(APIView):
     """Список справочников."""
 
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated, IsAccessPermissionGroup]
     serializer_class = RefBookSerializer
 
     @swagger_auto_schema(
+        operation_description="Получение списка справочников.",
         manual_parameters=[
             openapi.Parameter(
                 'date',
@@ -45,7 +52,11 @@ class RefBookListView(APIView):
 class RefBookElementsView(APIView):
     """Элементы справочника."""
 
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated, IsAccessPermissionGroup]
+
     @swagger_auto_schema(
+        operation_description="Получение элементов справочника.",
         manual_parameters=[
             openapi.Parameter(
                 'version',
@@ -83,7 +94,11 @@ class RefBookElementsView(APIView):
 class CheckElementView(APIView):
     """Проверка элемента справочника"""
 
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated, IsAccessPermissionGroup]
+
     @swagger_auto_schema(
+        operation_description="Проверка наличия элемента в справочнике.'.",
         manual_parameters=[
             openapi.Parameter(
                 'code',
