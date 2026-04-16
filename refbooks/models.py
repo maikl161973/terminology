@@ -1,6 +1,5 @@
-import datetime
-
 from django.db import models
+from django.contrib.auth.models import Group
 
 
 class RefBook(models.Model):
@@ -28,12 +27,6 @@ class RefBook(models.Model):
     def __str__(self):
         return f'{self.code} - {self.name}'
 
-    def current_version(self, date=datetime.date.today()):
-        """Текущая версия справочника на дату."""
-
-        return self.versions.filter(
-            start_date__lte=date
-        ).order_by('-start_date').first()
 
 
 class Version(models.Model):
@@ -84,3 +77,52 @@ class Element(models.Model):
 
     def __str__(self):
         return f'{self.code}: {self.value}'
+
+
+class Role(models.Model):
+    """Справочник ролей (только наименование)"""
+    
+    code = models.CharField(
+        max_length=5,
+        verbose_name='Код роли',
+        unique=True,
+        null=True,
+        blank=True
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Наименование роли',
+        unique=True
+    )
+    
+    class Meta:
+        db_table = 'roles'
+        verbose_name = verbose_name_plural = 'Справочник ролей'
+    
+    def __str__(self):
+        return f'{self.code} - {self.name}'
+
+
+class GroupRole(models.Model):
+    """Связь группы с ролью из справочника ролей."""
+    
+    group = models.OneToOneField(
+        Group,
+        on_delete=models.CASCADE,
+        related_name='group_role',
+        verbose_name='Группа'
+    )
+    role = models.ForeignKey(
+        Role,
+        on_delete=models.CASCADE,
+        related_name='group_roles',
+        verbose_name='Роль'
+    )
+    
+    class Meta:
+        db_table = 'group_roles'
+        verbose_name = verbose_name_plural = 'Роли групп'
+        unique_together = [('group', 'role')]
+    
+    def __str__(self):
+        return f'{self.group.name} - {self.role.name}'

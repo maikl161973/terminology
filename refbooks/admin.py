@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import (
+    UserAdmin as BaseUserAdmin, GroupAdmin as BaseGroupAdmin)
+from django.contrib.auth.models import User, Group
 
 from .helpers import current_version_refbook
-from .models import RefBook, Version, Element
+from .models import RefBook, Version, Element, Role, GroupRole
 
 admin.site.site_header = (
     'Администрирование приложения "Справочники терминологий"')
@@ -62,6 +65,45 @@ class ElementAdmin(admin.ModelAdmin):
     raw_id_fields = ('version',)
 
 
+class RoleAdmin(admin.ModelAdmin):
+    """Админка для справочника ролей"""
+
+    list_display = ('id', 'code', 'name')
+    fields = ('code', 'name')
+    search_fields = ('name', 'code')
+    verbose_name = verbose_name_plural = 'Справочник ролей'
+
+
+class GroupRoleInline(admin.TabularInline):
+    model = GroupRole
+    extra = 1
+    verbose_name = verbose_name_plural = 'Роль группы'
+    autocomplete_fields = ('role',)
+    max_num = 1
+
+
+class GroupAdmin(BaseGroupAdmin):
+    inlines = [GroupRoleInline]
+
+
+class GroupRoleAdmin(admin.ModelAdmin):
+    list_display = ('group', 'role')
+    list_filter = ('role__name',)
+    autocomplete_fields = ('group', 'role')
+    search_fields = ('group__name', 'role__name')
+    verbose_name = verbose_name_plural = 'Роли групп'
+
+
 admin.site.register(RefBook, RefBookAdmin)
 admin.site.register(Version, VersionAdmin)
 admin.site.register(Element, ElementAdmin)
+admin.site.register(Role, RoleAdmin)
+admin.site.register(GroupRole, GroupRoleAdmin)
+
+# Group с inline
+admin.site.unregister(Group)
+admin.site.register(Group, GroupAdmin)
+
+# Восстанавливаем стандартный UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, BaseUserAdmin)
